@@ -20,7 +20,7 @@ public class VendorController {
 	@Autowired
 	private VendorRepo vendorRepo;
 
-	@GetMapping
+	@GetMapping("/")
 	public List<Vendor> getAllVendors() {
 		return vendorRepo.findAll();
 	}
