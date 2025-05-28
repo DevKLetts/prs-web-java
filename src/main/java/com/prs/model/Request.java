@@ -14,10 +14,10 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Request implements Comparable<Request> {
 
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
-	private int id;
+	public int id;
 	
 	@ManyToOne
 	@JoinColumn(name = "userID", referencedColumnName = "id")
@@ -75,11 +75,11 @@ public class Request implements Comparable<Request> {
 		this.user = user;
 	}
 
-	public String getRequestnumber() {
+	public String getRequestNumber() {
 		return requestNumber;
 	}
 
-	public void setRequestnumber(String requestNumber) {
+	public void setRequestNumber(String requestNumber) {
 		this.requestNumber = requestNumber;
 	}
 
@@ -163,6 +163,8 @@ public class Request implements Comparable<Request> {
 		}
 		return 0;
 	}
+
+
 	
 	
 	

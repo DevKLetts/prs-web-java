@@ -1,14 +1,16 @@
 package com.prs.controller;
 
 import java.util.List;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.prs.db.LineItemRepo;
+import com.prs.db.RequestRepo;
 import com.prs.model.LineItem;
+import com.prs.model.Request;
+
+import jakarta.transaction.Transactional;
 
 
 @CrossOrigin
@@ -18,7 +20,8 @@ import com.prs.model.LineItem;
 public class LineItemController {
 	
 	@Autowired
-	private LineItemRepo lineItemRepo;
+	private static LineItemRepo lineItemRepo;
+	private static RequestRepo requestRepo;
 
 	@GetMapping
 	public List<LineItem> getAllLineItems() {
@@ -38,7 +41,13 @@ public class LineItemController {
 	
 	@PostMapping
 	public LineItem createLineItem(@RequestBody LineItem lineItem) {
-		return lineItemRepo.save(lineItem);
+		
+
+		
+		
+		updateTotal(lineItem.getId());
+		lineItemRepo.save(lineItem);
+		return ResponseEntity.ok(lineItem).getBody();
 	}
 
 	@PutMapping("/{id}")
@@ -48,6 +57,7 @@ public class LineItemController {
 		}
 		lineItem.setId(id);
 		lineItemRepo.save(lineItem);
+		updateTotal(lineItem.getId());
 		return ResponseEntity.ok(lineItem);
 	}
 
@@ -57,6 +67,25 @@ public class LineItemController {
 			return ResponseEntity.notFound().build();
 		}
 		lineItemRepo.deleteById(id);
+		// Update total for the associated request
+		List<LineItem> lineItem = lineItemRepo.findById(id);
+		if (lineItem != null) {
+			updateTotal(id);
+		}
 		return ResponseEntity.noContent().build();
 	}
+
+	
+	@Transactional
+	public void updateTotal(int reqId) {
+	    Request request = RequestRepo.findById(reqId).orElse(null);
+	    if (request == null) return;
+
+	    Double total = lineItemRepo.calculateTotalByRequestId(reqId);
+	    
+	    request.setTotal(total);
+	    requestRepo.save(request);
+	}
+
+
 }

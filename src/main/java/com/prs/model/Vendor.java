@@ -21,12 +21,12 @@ public class Vendor implements Comparable<Vendor> {
 	private String city;
 	private String state;
 	private String zip;
-	private String phone;
+	private String phoneNumber;
 	private String email;
 	
 	
 	// Constructor
-	public Vendor(int id, String code, String name, String address, String city, String state, String zip, String phone,
+	public Vendor(int id, String code, String name, String address, String city, String state, String zip, String phoneNumber,
 			String email) {
 		super();
 		this.id = id;
@@ -36,7 +36,7 @@ public class Vendor implements Comparable<Vendor> {
 		this.city = city;
 		this.state = state;
 		this.zip = zip;
-		this.phone = phone;
+		this.phoneNumber = phoneNumber;
 		this.email = email;
 	}
 
@@ -102,12 +102,12 @@ public class Vendor implements Comparable<Vendor> {
 		this.zip = zip;
 	}
 
-	public String getPhone() {
-		return phone;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	public String getEmail() {
@@ -121,7 +121,7 @@ public class Vendor implements Comparable<Vendor> {
 	@Override
 	public String toString() {
 		return "Vendor [id=" + id + ", code=" + code + ", name=" + name + ", address=" + address + ", city=" + city
-				+ ", state=" + state + ", zip=" + zip + ", phone=" + phone + ", email=" + email + "]";
+				+ ", state=" + state + ", zip=" + zip + ", phone number=" + phoneNumber + ", email=" + email + "]";
 	}
 
 	@Override

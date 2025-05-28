@@ -20,4 +20,7 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
    //List<Product> update(Product product);
 
     List<Product> deleteById(int id);
+
+
+	 
 }
