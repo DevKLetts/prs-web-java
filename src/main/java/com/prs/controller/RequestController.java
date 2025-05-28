@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/request")
+@RequestMapping("/api/Requests")
 
 public class RequestController {
 

@@ -1,9 +1,12 @@
 package com.prs.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity	
 public class LineItem implements Comparable<LineItem> {
@@ -12,9 +15,15 @@ public class LineItem implements Comparable<LineItem> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
+	@Column(name = "Id")
 	private int id;
-	private int requestId;
-	private int productId;
+	@ManyToOne
+	@JoinColumn(name = "RequestId")
+	private Request request;
+	@ManyToOne
+	@JoinColumn(name = "ProductId")
+	private Product product;
+	
 	private int quantity;
 
 	// Constructors
@@ -22,11 +31,11 @@ public class LineItem implements Comparable<LineItem> {
 		super();
 	}
 
-	public LineItem(int id, int requestId, int productId, int quantity) {
+	public LineItem(int id, Request request, Product product, int quantity) {
 		super();
 		this.id = id;
-		this.requestId = requestId;
-		this.productId = productId;
+		this.request = request;
+		this.product = product;
 		this.quantity = quantity;
 	}
 
@@ -39,20 +48,20 @@ public class LineItem implements Comparable<LineItem> {
 		this.id = id;
 	}
 
-	public int getRequestId() {
-		return requestId;
+	public Request getRequest() {
+		return request;
 	}
 
-	public void setRequestId(int requestId) {
-		this.requestId = requestId;
+	public void setRequest(Request request) {
+		this.request = request;
 	}
 
-	public int getProductId() {
-		return productId;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProductId(int productId) {
-		this.productId = productId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public int getQuantity() {
@@ -66,7 +75,7 @@ public class LineItem implements Comparable<LineItem> {
 	
 	@Override
 	public String toString() {
-		return "LineItem [id=" + id + ", requestId=" + requestId + ", productId=" + productId + ", quantity=" + quantity
+		return "LineItem [id=" + id + ", requestId=" + request + ", productId=" + product + ", quantity=" + quantity
 				+ "]";
 	}
 

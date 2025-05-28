@@ -13,7 +13,7 @@ import com.prs.model.Product;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/Products")
 
 public class ProductController {
 	

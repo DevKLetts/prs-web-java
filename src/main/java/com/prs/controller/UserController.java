@@ -5,20 +5,25 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.prs.db.UserRepo;
 import com.prs.model.*;
+import com.prs.service.AuthService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/Users")
 
 public class UserController {
 
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private AuthService authService;
 
 	@GetMapping("/")	
 	public List<User> getAllUsers() {
@@ -39,7 +44,17 @@ public class UserController {
 	public User addUser(@RequestBody User user) {
 		return userRepo.save(user);
 	}
-
+	
+    @PostMapping("/login")
+    public LoginDTO login(@RequestBody LoginDTO loginDTO) {
+        boolean isAuthenticated = authService.authenticate(loginDTO);
+        
+        if (isAuthenticated) {
+            return loginDTO;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid credentials");
+    }
+	
 	 @PutMapping("/{id}")
 	 public void update(@PathVariable int id, @RequestBody User user) {
 	  if (id != user.getId()) {
