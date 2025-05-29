@@ -36,7 +36,17 @@ public class RequestController {
 		} else {
 			return request;
 		}
-
+	}
+	
+	@GetMapping("/list-review/{userId}")
+	public List<Request> getRequestsForReview(@PathVariable int userId) {
+        List<Request> requests = requestRepo.findByStatus("REVIEW");
+;
+        if (!requests.isEmpty() && requests.stream().anyMatch(r -> r.getUser().getId() != userId)) {
+        		return requests;
+        } else {
+        	throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No requests found for review.");
+        }
 	}
 
 	@PostMapping
@@ -44,7 +54,7 @@ public class RequestController {
 		if (request.getRequestNumber() == null || request.getRequestNumber().isEmpty()) {
 			request.setRequestNumber(generateNextRequestNumber());
 			request.setSubmittedDate(LocalDate.now());
-			request.setStatus("New");
+			request.setStatus("NEW");
 			request.setTotal(0.00);
 			request.setReasonForRejection(null);
 		}
@@ -52,19 +62,59 @@ public class RequestController {
 	}
 
 	@PutMapping("/{id}")
-	 public void update(@PathVariable int id, @RequestBody Request request) {
+	 public Request update(@PathVariable int id, @RequestBody Request request) {
 	  if (id != request.getId()) {
-	   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie id mismatch vs URL.");
+	   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request id mismatch vs URL.");
 	  }
 	  else if (requestRepo.existsById(request.getId())) {
-	   requestRepo.save(request);
+	   return requestRepo.save(request);
 	  }
 	  else {
 	   throw new ResponseStatusException(
-	     HttpStatus.NOT_FOUND, "Movie not found for id "+id);
+	     HttpStatus.NOT_FOUND, "Request not found for id "+id);
 	  }
 	 } 
 	
+	@PutMapping("/submit-review/{id}")
+	public ResponseEntity<Request> submitRequest(@PathVariable int id) {
+		Optional<Request> optionalRequest = requestRepo.findById(id);
+		Request request = optionalRequest.get();
+		if(request != null) {
+				
+			if (request.getTotal() <= 50) {
+			request.setStatus("APPROVED");;
+			}
+			else {
+				request.setStatus("REVIEW"); 
+			}
+			request.setSubmittedDate(LocalDate.now());
+			requestRepo.save(request);
+			return ResponseEntity.ok(request);
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Request ID Not Found");
+		}
+		
+	}
+	
+	@PutMapping("/approve/{id}")
+	public ResponseEntity<Request> approveRequest(@PathVariable int id) {
+		Optional<Request> optionalRequest = requestRepo.findById(id);
+		Request request = optionalRequest.get();
+		request.setStatus("APPROVED");
+		requestRepo.save(request);
+		return ResponseEntity.ok(request);
+	}
+	
+	@PutMapping("/reject/{id}")
+	public ResponseEntity<Request> rejectRequest(@PathVariable int id, @RequestBody String reasonForRejection) {
+		Optional<Request> optionalRequest = requestRepo.findById(id);
+		Request request = optionalRequest.get();
+		request.setStatus("REJECTED");
+		request.setReasonForRejection(reasonForRejection);
+		requestRepo.save(request);
+		return ResponseEntity.noContent().build();
+	}
+		
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteRequest(@PathVariable int id) {
 		if (!requestRepo.existsById(id)) {
@@ -73,19 +123,6 @@ public class RequestController {
 		requestRepo.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
-	
-	@PutMapping("/{id}/approve")
-	public ResponseEntity<Request> approveRequest(@PathVariable int id) {
-		Optional<Request> optionalRequest = requestRepo.findById(id);
-		if (optionalRequest.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-		Request request = optionalRequest.get();
-		request.setStatus("Approved");
-		requestRepo.save(request);
-		return ResponseEntity.ok(request);
-	}
-	
 	
 	public String generateNextRequestNumber() {
 	    String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"));

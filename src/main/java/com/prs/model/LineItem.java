@@ -87,6 +87,6 @@ public class LineItem implements Comparable<LineItem> {
         }
 		return 0;
 	}
-			
+
 }
 

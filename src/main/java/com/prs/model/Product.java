@@ -1,9 +1,12 @@
 package com.prs.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Product implements Comparable<Product> {
@@ -11,8 +14,13 @@ public class Product implements Comparable<Product> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
+	@Column(name = "ProductID")
 	private int id;
-	private int vendorID;
+	
+	@ManyToOne
+	@JoinColumn(name = "vendorID")
+	private Vendor vendor;
+	
 	private String partNumber;
 	private String name;
 	private double price;
@@ -24,10 +32,10 @@ public class Product implements Comparable<Product> {
 		super();
 	}
 	
-	public Product(int id, int vendorID, String partNumber, String name, double price, String unit, String photoPath) {
+	public Product(int id, Vendor vendor, String partNumber, String name, double price, String unit, String photoPath) {
 		super();
 		this.id = id;
-		this.vendorID = vendorID;
+		this.vendor = vendor;
 		this.partNumber = partNumber;
 		this.name = name;
 		this.price = price;
@@ -45,12 +53,12 @@ public class Product implements Comparable<Product> {
 		this.id = id;
 	}
 
-	public int getVendorID() {
-		return vendorID;
+	public Vendor getVendor() {
+		return vendor;
 	}
 
-	public void setVendorID(int vendorID) {
-		this.vendorID = vendorID;
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
 	}
 
 	public String getPartNumber() {
@@ -95,7 +103,7 @@ public class Product implements Comparable<Product> {
 	
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", vendorID=" + vendorID + ", partNumber=" + partNumber + ", name=" + name
+		return "Product [id=" + id + ", vendorID=" + vendor + ", partNumber=" + partNumber + ", name=" + name
 				+ ", price=" + price + ", unit=" + unit + ", photoPath=" + photoPath + "]";
 	}
 

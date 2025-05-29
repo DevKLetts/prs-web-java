@@ -12,25 +12,25 @@ public class LoginDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
-    private String userName;
+    private String username;
     private String password;
 
     // Default constructor
     public LoginDTO() {}
 
     // Parameterized constructor
-    public LoginDTO(String userName, String password) {
-        this.userName = userName;
+    public LoginDTO(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
     // Getters and Setters
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUseName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

@@ -12,6 +12,8 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
     // For example, to find movies by title:
 
     Optional<Product> findById(int id);
+    
+
 
     List<Product> findAll();
 

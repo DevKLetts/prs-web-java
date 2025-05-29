@@ -20,7 +20,7 @@ public class Request implements Comparable<Request> {
 	public int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "userID", referencedColumnName = "id")
+	@JoinColumn(name = "userID")
 	private User user;
 	
 	private String requestNumber;
@@ -74,7 +74,7 @@ public class Request implements Comparable<Request> {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
+	
 	public String getRequestNumber() {
 		return requestNumber;
 	}

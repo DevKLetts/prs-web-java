@@ -16,7 +16,7 @@ public class AuthService {
     }
 
     public  boolean authenticate(LoginDTO loginDTO) {
-    	User user = userRepo.findByUserName(loginDTO.getUserName());
+    	User user = userRepo.findByUsername(loginDTO.getUsername());
         return user != null && user.getPassword().equals(loginDTO.getPassword());
     }
 

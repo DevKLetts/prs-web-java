@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -58,31 +59,23 @@ public class LineItemController {
 	
 	@PostMapping
 	public LineItem createLineItem(@RequestBody LineItem lineItem) {
-		Request request = requestRepo.findById(lineItem.getRequest().getId())
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Request not found"));
-		
-		Product product = productRepo.findById(lineItem.getProduct().getId())
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
-		lineItem.setRequest(request);
-		lineItem.setProduct(product);
-		
-		updateTotal(request.getId());
-		return 
+
 		lineItemRepo.save(lineItem);
+		updateTotal(lineItem.getRequest().getId());
+		return lineItem;
+		
+		
 	}
-
-
-	
-	
 	
 	@PutMapping("/{id}")
-	public void updateLineItem(@PathVariable int id, @RequestBody LineItem lineItem) {
+	public ResponseEntity<Object> updateLineItem(@PathVariable int id, @RequestBody LineItem lineItem) {
 		if (id != lineItem.getId()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LineItem id mismatch vs URL.");
 		}
 		else if (lineItemRepo.existsById(lineItem.getId())) {
 			lineItemRepo.save(lineItem);
-			updateTotal(lineItem.getRequest().getId());		
+			updateTotal(lineItem.getRequest().getId());	
+			return ResponseEntity.noContent().build();
 		}
 		else {
 			throw new ResponseStatusException(
@@ -91,13 +84,14 @@ public class LineItemController {
 	}
 
 	@DeleteMapping("/{id}")
-	public void deleteLineItem(@PathVariable int id) {
+	public ResponseEntity<Object> deleteLineItem(@PathVariable int id) {
 		if (lineItemRepo.existsById(id)) {
 			// Update total for the associated request
 			Optional<LineItem> lineItem = lineItemRepo.findById(id);
 			int reqId = lineItem.get().getRequest().getId();
 			lineItemRepo.deleteById(id);
 			updateTotal(reqId);
+			return ResponseEntity.noContent().build();
 		}
 		else {
 			throw new ResponseStatusException(

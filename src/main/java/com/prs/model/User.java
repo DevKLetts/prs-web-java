@@ -18,30 +18,30 @@ public class User implements Comparable<User> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
 	private int id;
-	private String userName;
+	private String username;
 	private String password;
 	private String firstName;
 	private String lastName;
 	private String phoneNumber;
 	private String email;
-	private boolean Reviewer;
-	private boolean Admin;
+	private boolean reviewer;
+	private boolean admin;
 
 	
 	// Constructor
 
-	public User(int id, String userName, String password, String firstName, String lastName, String phoneNumber,
-			String email, boolean Reviewer, boolean Admin) {
+	public User(int id, String username, String password, String firstName, String lastName, String phoneNumber,
+			String email, boolean reviewer, boolean admin) {
 		super();
 		this.id = id;
-		this.userName = userName;
+		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		this.Reviewer = Reviewer;
-		this.Admin = Admin;
+		this.reviewer = reviewer;
+		this.admin = admin;
 	}
 
 	public User() {
@@ -58,12 +58,12 @@ public class User implements Comparable<User> {
 		this.id = id;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String username) {
-		this.userName = username;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -107,26 +107,26 @@ public class User implements Comparable<User> {
 	}
 
 	public boolean isReviewer() {
-		return Reviewer;
+		return reviewer;
 	}
 
-	public void setReviewer(boolean isReviewer) {
-		this.Reviewer = isReviewer;
+	public void setReviewer(boolean reviewer) {
+		this.reviewer = reviewer;
 	}
 
 	public boolean isAdmin() {
-		return Admin;
+		return admin;
 	}
 
-	public void setAdmin(boolean isAdmin) {
-		this.Admin = isAdmin;
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", firstName=" + firstName
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", phoneNumber=" + phoneNumber + ", email=" + email + ", isReviewer="
-				+ Reviewer + ", isAdmin=" + Admin + "]";
+				+ reviewer + ", isAdmin=" + admin + "]";
 	}
 
 	@Override

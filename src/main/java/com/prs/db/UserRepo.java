@@ -19,11 +19,9 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 	
 	// - findUserByUserNameAndPassword
 	@Query(value = "SELECT username, password FROM users WHERE username = :username", nativeQuery = true)
-	List<Object[]> findByUserNameAndPassword(@Param("username") String username);
-	
+	List<Object[]> findByUsernameAndPassword(@Param("username") String username);
 
-
-		// - saveUser
+	// - saveUser
 	List<User> save(List<User> users);
 	
 	// - updateUser
@@ -32,7 +30,7 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 	// - deleteUser
 	List<User> deleteById(int id);
 
-	User findByUserName(String userName);
+	User findByUsername(String username);
 
 	
 }

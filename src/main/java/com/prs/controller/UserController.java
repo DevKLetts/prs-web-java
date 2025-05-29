@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -52,8 +51,11 @@ public class UserController {
         if (isAuthenticated) {
             return loginDTO;
         }
+        else {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid credentials");
+        }
     }
+        
 	
 	 @PutMapping("/{id}")
 	 public void update(@PathVariable int id, @RequestBody User user) {
