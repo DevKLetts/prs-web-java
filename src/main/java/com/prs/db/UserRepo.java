@@ -30,6 +30,7 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 	// - deleteUser
 	List<User> deleteById(int id);
 
+	// - findByUsername
 	User findByUsername(String username);
 
 	

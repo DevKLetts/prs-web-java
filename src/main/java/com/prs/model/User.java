@@ -28,8 +28,7 @@ public class User implements Comparable<User> {
 	private boolean admin;
 
 	
-	// Constructor
-
+	// Constructors
 	public User(int id, String username, String password, String firstName, String lastName, String phoneNumber,
 			String email, boolean reviewer, boolean admin) {
 		super();
@@ -49,7 +48,6 @@ public class User implements Comparable<User> {
 	}
 	
 	// Getters and Setters
-
 	public int getId() {
 		return id;
 	}
@@ -122,6 +120,7 @@ public class User implements Comparable<User> {
 		this.admin = admin;
 	}
 
+	// Override methods
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName

@@ -20,7 +20,7 @@ public class Request implements Comparable<Request> {
 	public int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "userID")
+	@JoinColumn(name = "UserID")
 	private User user;
 	
 	private String requestNumber;

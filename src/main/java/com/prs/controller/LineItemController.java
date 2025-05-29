@@ -25,18 +25,23 @@ import jakarta.transaction.Transactional;
 
 public class LineItemController {
 	
+	// Injecting repositories to handle database operations for LineItem, Product, and Request entities
 	@Autowired
 	LineItemRepo lineItemRepo;
+	
 	@Autowired
 	ProductRepo productRepo;
-	@Autowired	
+	
+	@Autowired
 	RequestRepo requestRepo;
 
+	// Endpoint to retrieve all LineItems
 	@GetMapping("/")
 	public List<LineItem> getAllLineItems() {
 		return lineItemRepo.findAll();
 	}
 
+	// Endpoint to retrieve a LineItem by its ID
 	@GetMapping("/{id}")
 	public Optional<LineItem> getLineItemById(@PathVariable int id) {
 		Optional<LineItem> lineItem = lineItemRepo.findById(id);
@@ -47,6 +52,7 @@ public class LineItemController {
         }
 	}
 
+	// Endpoint to retrieve LineItems by Request ID
 	@GetMapping("/lines-for-req/{reqId}")
 	public List<LineItem> getLineItemsByRequestId(@PathVariable int reqId) {
 		List<LineItem> lineItems = lineItemRepo.findByRequestId(reqId);
@@ -57,6 +63,7 @@ public class LineItemController {
 		}
 	}
 	
+	// Endpoint to create a new LineItem
 	@PostMapping
 	public LineItem createLineItem(@RequestBody LineItem lineItem) {
 
@@ -67,6 +74,7 @@ public class LineItemController {
 		
 	}
 	
+	// Endpoint to update an existing LineItem
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> updateLineItem(@PathVariable int id, @RequestBody LineItem lineItem) {
 		if (id != lineItem.getId()) {
@@ -83,14 +91,14 @@ public class LineItemController {
 		}
 	}
 
+	// Endpoint to delete a LineItem by its ID
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteLineItem(@PathVariable int id) {
 		if (lineItemRepo.existsById(id)) {
 			// Update total for the associated request
 			Optional<LineItem> lineItem = lineItemRepo.findById(id);
-			int reqId = lineItem.get().getRequest().getId();
 			lineItemRepo.deleteById(id);
-			updateTotal(reqId);
+			updateTotal(lineItem.get().getRequest().getId());
 			return ResponseEntity.noContent().build();
 		}
 		else {
@@ -100,7 +108,7 @@ public class LineItemController {
 	}
 
 
-	
+	// Method to update the total cost of a request based on its line items
 	@Transactional
 	public void updateTotal(int reqId) {
 	    Optional<Request> request = requestRepo.findById(reqId);
@@ -108,7 +116,7 @@ public class LineItemController {
 	    if (request.isPresent()) {
 	    Request r = request.get();
 	    Double total = lineItemRepo.calculateTotalByRequestId(reqId);
-	    r.setTotal(total);
+	    r.setTotal(total != null ? total : 0.0);
 	    requestRepo.save(r);
 	}
 	}

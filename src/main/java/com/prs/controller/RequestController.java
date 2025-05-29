@@ -19,15 +19,17 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class RequestController {
 
-
+	// Repository for Request entity
 	@Autowired
 	private RequestRepo requestRepo;
 
+	// Get mapping to retrieve all requests
 	@GetMapping("/")
 	public List<Request> getAllRequests() {
 		return requestRepo.findAll();
 	}
 
+	// Get mapping to retrieve a request by ID
 	@GetMapping("/{id}")
 	public Optional<Request> getRequestById(@PathVariable int id) {
 		Optional<Request> request = requestRepo.findById(id);
@@ -38,6 +40,7 @@ public class RequestController {
 		}
 	}
 	
+	// Get mapping to retrieve all requests as long as the user ID does not match the request's user ID
 	@GetMapping("/list-review/{userId}")
 	public List<Request> getRequestsForReview(@PathVariable int userId) {
         List<Request> requests = requestRepo.findByStatus("REVIEW");
@@ -49,9 +52,16 @@ public class RequestController {
         }
 	}
 
+	// Post mapping to create a new request
 	@PostMapping
 	public Request createRequest(@RequestBody Request request) {
 		if (request.getRequestNumber() == null || request.getRequestNumber().isEmpty()) {
+			if (request.getUser().getId() == 0 | request.getUser() == null ||  !requestRepo.findById(request.getUser().getId()).isPresent()) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A valid User ID must be provided.");
+			}
+			if (request.getDateNeeded().isBefore(LocalDate.now().plusDays(1))) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Date needed cannot be before tomorrow.");
+            }
 			request.setRequestNumber(generateNextRequestNumber());
 			request.setSubmittedDate(LocalDate.now());
 			request.setStatus("NEW");
@@ -61,6 +71,7 @@ public class RequestController {
 		return requestRepo.save(request);
 	}
 
+	// Put mapping to update a request
 	@PutMapping("/{id}")
 	 public Request update(@PathVariable int id, @RequestBody Request request) {
 	  if (id != request.getId()) {
@@ -75,6 +86,8 @@ public class RequestController {
 	  }
 	 } 
 	
+	// Put mapping to submit a request for review
+	// If total amount is less than or equal to 50, it is approved immediately
 	@PutMapping("/submit-review/{id}")
 	public ResponseEntity<Request> submitRequest(@PathVariable int id) {
 		Optional<Request> optionalRequest = requestRepo.findById(id);
@@ -96,6 +109,7 @@ public class RequestController {
 		
 	}
 	
+	// Put mapping to approve a request
 	@PutMapping("/approve/{id}")
 	public ResponseEntity<Request> approveRequest(@PathVariable int id) {
 		Optional<Request> optionalRequest = requestRepo.findById(id);
@@ -105,12 +119,21 @@ public class RequestController {
 		return ResponseEntity.ok(request);
 	}
 	
+	// Put mapping to reject a request with a reason
 	@PutMapping("/reject/{id}")
 	public ResponseEntity<Request> rejectRequest(@PathVariable int id, @RequestBody String reasonForRejection) {
 		Optional<Request> optionalRequest = requestRepo.findById(id);
 		Request request = optionalRequest.get();
-		request.setStatus("REJECTED");
-		request.setReasonForRejection(reasonForRejection);
+		if(request.getStatus().equalsIgnoreCase("APPROVED")) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot reject an approved request");
+		}else {
+				request.setStatus("REJECTED");
+		}
+		if (reasonForRejection == null || reasonForRejection.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reason for rejection cannot be empty");
+		} else {
+			request.setReasonForRejection(reasonForRejection);
+		}
 		requestRepo.save(request);
 		return ResponseEntity.noContent().build();
 	}

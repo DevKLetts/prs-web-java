@@ -74,7 +74,8 @@ public class LineItem implements Comparable<LineItem> {
 		this.quantity = quantity;
 	}
 
-	
+
+	// Override methods
 	@Override
 	public String toString() {
 		return "LineItem [id=" + id + ", requestId=" + request + ", productId=" + product + ", quantity=" + quantity

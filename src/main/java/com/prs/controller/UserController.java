@@ -18,17 +18,21 @@ import com.prs.service.AuthService;
 
 public class UserController {
 
+	// Injecting UserRepo to handle database operations for User entities
 	@Autowired
 	private UserRepo userRepo;
 	
+	// Injecting AuthService to handle authentication logic
 	@Autowired
 	private AuthService authService;
 
+	// Endpoint to retrieve all users
 	@GetMapping("/")	
 	public List<User> getAllUsers() {
 		return userRepo.findAll();
 	}
 	
+	// Endpoint to retrieve a user by ID
 	@GetMapping("/{id}")
 	public Optional<User> getById(@PathVariable int id) {
 		Optional<User> u = userRepo.findById(id);

@@ -12,24 +12,25 @@ public class Product implements Comparable<Product> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
+
+	// Fields
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "VendorID")
 	private Vendor vendor;
-	
+
 	private String partNumber;
 	private String name;
 	private double price;
 	private String unit;
-	private String photoPath;	
-	
+	private String photoPath;
+
 	// Constructors
 	public Product() {
 		super();
 	}
-	
+
 	public Product(int id, Vendor vendor, String partNumber, String name, double price, String unit, String photoPath) {
 		super();
 		this.id = id;
@@ -40,7 +41,6 @@ public class Product implements Comparable<Product> {
 		this.unit = unit;
 		this.photoPath = photoPath;
 	}
-
 
 	// Getters and Setters
 	public int getId() {
@@ -98,7 +98,8 @@ public class Product implements Comparable<Product> {
 	public void setPhotoPath(String photoPath) {
 		this.photoPath = photoPath;
 	}
-	
+
+	// Override methods
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", vendorID=" + vendor + ", partNumber=" + partNumber + ", name=" + name
@@ -109,11 +110,9 @@ public class Product implements Comparable<Product> {
 	public int compareTo(Product o) {
 		if (o instanceof Product) {
 			Product p = (Product) o;
-            return this.getName().compareTo(p.getName());
-        }
+			return this.getName().compareTo(p.getName());
+		}
 		return 0;
 	}
-	
-	
-	
+
 }

@@ -16,16 +16,18 @@ import com.prs.model.Product;
 @RequestMapping("/api/Products")
 
 public class ProductController {
-	
-	
+
+	// Injecting ProductRepo to handle database operations for Product entities
 	@Autowired
 	private ProductRepo productRepo;
-	
+
+	// Endpoint to retrieve all products
 	@GetMapping("/")
 	public List<Product> getAllProducts() {
 		return productRepo.findAll();
 	}
-	
+
+	// Endpoint to retrieve a product by ID
 	@GetMapping("/{id}")
 	public Optional<Product> getById(@PathVariable int id) {
 		Optional<Product> p = productRepo.findById(id);
@@ -35,38 +37,36 @@ public class ProductController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product ID Not Found");
 		}
 	}
-	
+
+	// Endpoint to add a new product
 	@PostMapping
 	public Product addProduct(@RequestBody Product product) {
-		
-		
+
 		return productRepo.save(product);
 	}
-	
-	 @PutMapping("/{id}")
-	 public void update(@PathVariable int id, @RequestBody Product product) {
-	  if (id != product.getId()) {
-	   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product id mismatch vs URL.");
-	  }
-	  else if (productRepo.existsById(product.getId())) {
-	   productRepo.save(product);
-	  }
-	  else {
-	   throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found for id "+id);
-	  }
-	 }
-	
-	 @DeleteMapping("/{id}")
-		public void delete(@PathVariable int id) {
-			if (productRepo.existsById(id)) {
-				productRepo.deleteById(id);
-			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found for id " + id);
-			}
-		}
-	
-	 
 
-		
-	
+	// Endpoint to update an existing product
+	@PutMapping("/{id}")
+	public void update(@PathVariable int id, @RequestBody Product product) {
+		if (id != product.getId()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product id mismatch vs URL.");
+		} else if (productRepo.existsById(product.getId())) {
+			productRepo.save(product);
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found for id " + id);
+		}
+	}
+
+	// Endpoint to delete a product by ID
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable int id) {
+		if (productRepo.existsById(id)) {
+			productRepo.deleteById(id);
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found for id " + id);
+		}
+	}
+
 }
