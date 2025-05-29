@@ -1,6 +1,5 @@
 package com.prs.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,11 +13,10 @@ public class Product implements Comparable<Product> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
-	@Column(name = "ProductID")
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "vendorID")
+	@JoinColumn(name = "VendorID")
 	private Vendor vendor;
 	
 	private String partNumber;

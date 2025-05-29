@@ -17,9 +17,11 @@ public class LineItem implements Comparable<LineItem> {
 
 	@Column(name = "Id")
 	private int id;
+	
 	@ManyToOne
 	@JoinColumn(name = "RequestId")
 	private Request request;
+	
 	@ManyToOne
 	@JoinColumn(name = "ProductId")
 	private Product product;
