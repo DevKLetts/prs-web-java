@@ -3,6 +3,7 @@ package com.prs.controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.prs.db.RequestRepo;
+import com.prs.db.UserRepo;
 import com.prs.model.Request;
 
 import java.time.LocalDate;
@@ -22,6 +23,8 @@ public class RequestController {
 	// Repository for Request entity
 	@Autowired
 	private RequestRepo requestRepo;
+	@Autowired
+	private UserRepo userRepo;
 
 	// Get mapping to retrieve all requests
 	@GetMapping("/")
@@ -56,7 +59,7 @@ public class RequestController {
 	@PostMapping
 	public Request createRequest(@RequestBody Request request) {
 		if (request.getRequestNumber() == null || request.getRequestNumber().isEmpty()) {
-			if (request.getUser().getId() == 0 | request.getUser() == null ||  !requestRepo.findById(request.getUser().getId()).isPresent()) {
+			if (request.getUser().getId() == 0 | request.getUser() == null ||  !userRepo.findById(request.getUser().getId()).isPresent()) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A valid User ID must be provided.");
 			}
 			if (request.getDateNeeded().isBefore(LocalDate.now().plusDays(1))) {
